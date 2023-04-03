@@ -178,7 +178,7 @@
         FROM
         ams_admin
         WHERE
-        id=#{id}
+        username=#{username}
     </select>
 
     <sql id="LoginInfo">
@@ -187,7 +187,7 @@
         </if>
     </sql>
 
-    <resultMap id="LoginInfoResultMap" type="com.example.csmallpassport.pojo.vo.AdminListItemVO">
+    <resultMap id="LoginInfoResultMap" type="com.example.csmallpassport.pojo.vo.AdminLoginInfoVO">
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
