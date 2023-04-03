@@ -110,4 +110,11 @@ public class AdminMapperTests {
         }
     }
 
+    @Test
+    void getLoginInfoByUsername(){
+        String username = "root";
+        Object queryResult = mapper.getLoginInfoByUsername(username);
+//        log.debug("根据username【{}】查询数据详情完成，查询结果：{}", username, queryResult);
+        System.out.println("根据username【{"+username+"}】查询数据详情完成，查询结果：{"+queryResult+"}");
+    }
 }

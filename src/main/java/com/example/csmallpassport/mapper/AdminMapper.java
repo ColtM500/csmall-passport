@@ -2,6 +2,7 @@ package com.example.csmallpassport.mapper;
 
 import com.example.csmallpassport.pojo.entity.Admin;
 import com.example.csmallpassport.pojo.vo.AdminListItemVO;
+import com.example.csmallpassport.pojo.vo.AdminLoginInfoVO;
 import com.example.csmallpassport.pojo.vo.AdminStandardVO;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +33,8 @@ public interface AdminMapper {
     int countByEmail(String email);
 
     AdminStandardVO getStandardById(Long id);
+
+    AdminLoginInfoVO getLoginInfoByUsername(String username);
 
     List<AdminListItemVO> list();
 }

@@ -171,5 +171,26 @@
         <result column="gmt_last_login" property="gmtLastLogin"/>
     </resultMap>
 
+<!--    AdminLoginInfoVO getLoginInfoByUsername(String username);-->
+    <select id="getLoginInfoByUsername" resultMap="LoginInfoResultMap">
+        SELECT
+        <include refid="LoginInfo"/>
+        FROM
+        ams_admin
+        WHERE
+        id=#{id}
+    </select>
 
+    <sql id="LoginInfo">
+        <if test="true">
+            id, username, password, enable
+        </if>
+    </sql>
+
+    <resultMap id="LoginInfoResultMap" type="com.example.csmallpassport.pojo.vo.AdminListItemVO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="enable" property="enable"/>
+    </resultMap>
 </mapper>
