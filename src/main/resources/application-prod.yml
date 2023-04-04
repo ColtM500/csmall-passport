@@ -6,4 +6,4 @@ spring:
 
 logging:
   level:
-    cn.tedu.csmall: info
+    com.example.csmallpassport: info
