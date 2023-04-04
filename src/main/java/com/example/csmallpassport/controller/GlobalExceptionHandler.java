@@ -4,6 +4,7 @@ import com.example.csmallpassport.ex.ServiceException;
 import com.example.csmallpassport.web.JsonResult;
 import com.example.csmallpassport.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -69,6 +70,12 @@ public class GlobalExceptionHandler {
         return JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED_DISABLED, message);
     }
 
+    @ExceptionHandler
+    public JsonResult handleAccessDeniedException(AccessDeniedException e) {
+        String message = "禁止访问，当前登录的账号无此操作权限！";
+        log.warn(message);
+        return JsonResult.fail(ServiceCode.ERR_FORBIDDEN, message);
+    }
 
     @ExceptionHandler
     public JsonResult handleConstraintViolationException(ConstraintViolationException e) {

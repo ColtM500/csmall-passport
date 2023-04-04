@@ -5,6 +5,7 @@ import com.example.csmallpassport.service.IAdminService;
 import com.example.csmallpassport.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,7 @@ public class AdminController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('/ams/admin/read')")
     public String list(@AuthenticationPrincipal @ApiIgnore User user){
         log.debug("当事人的用户名:{}",user.getUsername());
 

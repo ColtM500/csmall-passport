@@ -4,11 +4,15 @@ import com.example.csmallpassport.mapper.AdminMapper;
 import com.example.csmallpassport.pojo.vo.AdminLoginInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Slf4j
 @Service
@@ -31,17 +35,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         log.debug("开始创建返回给Spring Security的UserDetails对象……");
-        UserDetails userDetails = User.builder() // 构建者模式
-                .username(loginInfo.getUsername()) //存入用户名
-                .password(loginInfo.getPassword()) //存入密码
-                .disabled(loginInfo.getEnable() != 1) //存入启用，禁用状态
-                .accountLocked(false) //存入账号是否锁定的状态
-                .credentialsExpired(false) //存入凭证是否过期的状态
-                .accountExpired(false) //存入账号是否过期的状态
-                .authorities("这是一个临时的山寨权限，暂时没什么用")// 存入权限列表
-                .build();// 执行构建，得到UserDetails类型的对象
-        log.debug("即将向Spring Security 返回UserDetails类型对象， 返回结果：{}", userDetails);
-        return userDetails;
+//        UserDetails userDetails = User.builder() // 构建者模式
+//                .username(loginInfo.getUsername()) //存入用户名
+//                .password(loginInfo.getPassword()) //存入密码
+//                .disabled(loginInfo.getEnable() != 1) //存入启用，禁用状态
+//                .accountLocked(false) //存入账号是否锁定的状态
+//                .credentialsExpired(false) //存入凭证是否过期的状态
+//                .accountExpired(false) //存入账号是否过期的状态
+//                .authorities("这是一个临时的山寨权限，暂时没什么用")// 存入权限列表
+//                .build();// 执行构建，得到UserDetails类型的对象
+
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        for (String permission: loginInfo.getPermissions()){
+            authorities.add(new SimpleGrantedAuthority(permission));
+        }
+
+        AdminDetails adminDetails = new AdminDetails(
+                loginInfo.getId(),
+                loginInfo.getUsername(),
+                loginInfo.getPassword(),
+                loginInfo.getEnable()==1,
+                authorities
+        );
+
+        log.debug("即将向Spring Security 返回UserDetails类型对象， 返回结果：{}", adminDetails);
+        return adminDetails;
 
     }
 }
