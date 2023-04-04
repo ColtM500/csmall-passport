@@ -27,6 +27,8 @@ public class AdminLoginInfoVO implements Serializable {
      * 是否启用 1=启用 0=禁用
      */
     private Integer enable;
-
-
+    /**
+     * 权限列表
+     */
+    private List<String> permissions;
 }

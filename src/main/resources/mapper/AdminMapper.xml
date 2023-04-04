@@ -146,7 +146,7 @@
         FROM
         ams_admin
         ORDER BY
-        id DESC
+        id
     </select>
 
     <sql id="ListQueryFields">
@@ -177,20 +177,38 @@
         <include refid="LoginInfo"/>
         FROM
         ams_admin
+        LEFT JOIN ams_admin_role ON ams_admin.id=ams_admin_role.admin_id
+        LEFT JOIN ams_role_permission ON ams_admin_role.role_id=ams_role_permission.role_id
+        LEFT JOIN ams_permission ON ams_role_permission.permission_id=ams_permission.id
         WHERE
         username=#{username}
     </select>
 
     <sql id="LoginInfo">
         <if test="true">
-            id, username, password, enable
+            ams_admin.id,
+            ams_admin.username,
+            ams_admin.password,
+            ams_admin.enable,
+            ams_permission.value
         </if>
     </sql>
 
+    <!-- collection标签：配置List类型的属性 -->
+    <!-- collection标签的property属性：List类型的属性的名称 -->
+    <!-- collection标签的ofType属性：List属性的元素的数据类型，取值为元素类型的全限定名，java.lang包下的类可以省略包名 -->
+    <!-- collection标签的子级：配置如何创建出List集合中的各个元素对象 -->
+    <!-- collection标签的子级的constructor标签：通过构造方法创建对象 -->
+    <!-- constructor标签的子级的arg标签：配置构造方法的参数 -->
     <resultMap id="LoginInfoResultMap" type="com.example.csmallpassport.pojo.vo.AdminLoginInfoVO">
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
         <result column="enable" property="enable"/>
+        <collection property="permissions" ofType="String">
+            <constructor>
+                <arg column="value"/>
+            </constructor>
+        </collection>
     </resultMap>
 </mapper>
