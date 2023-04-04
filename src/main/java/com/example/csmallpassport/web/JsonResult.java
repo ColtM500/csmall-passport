@@ -1,17 +1,11 @@
 package com.example.csmallpassport.web;
 
 import com.example.csmallpassport.ex.ServiceException;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 @Data
-@NoArgsConstructor //无参的构造方法
-@AllArgsConstructor   //全参的构造方法
-@Accessors(chain = true) //支持链式写法
 public class JsonResult implements Serializable {
 
     /**

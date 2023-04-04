@@ -31,15 +31,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         log.debug("开始创建返回给Spring Security的UserDetails对象……");
-        UserDetails userDetails = User.builder()
+        UserDetails userDetails = User.builder() // 构建者模式
                 .username(loginInfo.getUsername()) //存入用户名
                 .password(loginInfo.getPassword()) //存入密码
                 .disabled(loginInfo.getEnable() != 1) //存入启用，禁用状态
                 .accountLocked(false) //存入账号是否锁定的状态
                 .credentialsExpired(false) //存入凭证是否过期的状态
                 .accountExpired(false) //存入账号是否过期的状态
-                .authorities("这是一个临时的山寨权限，暂时没什么用")
-                .build();
+                .authorities("这是一个临时的山寨权限，暂时没什么用")// 存入权限列表
+                .build();// 执行构建，得到UserDetails类型的对象
         log.debug("即将向Spring Security 返回UserDetails类型对象， 返回结果：{}", userDetails);
         return userDetails;
 
