@@ -25,6 +25,10 @@ public enum ServiceCode {
      */
     ERR_UNAUTHORIZED_DISABLED(40101),
     /**
+     * 错误：无权限
+     */
+    ERR_FORBIDDEN(40300),
+    /**
      * 错误：数据不存在
      */
     ERR_NOT_FOUND(40400),

@@ -5,7 +5,10 @@ import com.example.csmallpassport.service.IAdminService;
 import com.example.csmallpassport.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
@@ -43,7 +46,9 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String list(){
-        return "接收到【添加管理员列表】的请求， 但是， 服务器端尚未实现此功能!";
+    public String list(@AuthenticationPrincipal @ApiIgnore User user){
+        log.debug("当事人的用户名:{}",user.getUsername());
+
+        return "接收到【添加管理员列表】的请求,但是,服务器端尚未实现此功能!";
     }
 }
