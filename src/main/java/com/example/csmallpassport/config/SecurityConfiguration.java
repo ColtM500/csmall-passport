@@ -21,10 +21,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         String[] urls = {
-                "",
-                "/",
-                "/index.html",
-                "/helloworld"
+                "/doc.html",
+                "/favicon.ico",
+                "/**/*.css",
+                "/**/*.js",
+                "/swagger-resources",
+                "/v2/api-docs",
+                "/admins/*"
         };
 
         //禁用“防止伪造的跨域攻击”这种防御机制
@@ -40,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated() //以上匹配的请求必须是”已经通过认证的“
         ;
         //调用formLogin表示启用登录和登出页面 如果未调用此方法 则没有登录和登出页面
-        http.formLogin();
+//        http.formLogin();
 
 //        super.configure(http); //不要调用父类的同款方法
     }

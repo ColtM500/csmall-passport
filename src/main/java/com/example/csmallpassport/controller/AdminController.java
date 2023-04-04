@@ -1,12 +1,25 @@
 package com.example.csmallpassport.controller;
 
+import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
+import com.example.csmallpassport.service.IAdminService;
+import com.example.csmallpassport.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/admins")
 public class AdminController {
+    @Autowired
+    private IAdminService service;
+
+    @PostMapping("/login")
+    public JsonResult login(AdminLoginDTO adminLoginDTO) {
+        log.debug("开始处理【管理员登录】的请求，参数：{}", adminLoginDTO);
+        service.login(adminLoginDTO);
+        return JsonResult.ok();
+    }
 
     @PostMapping("/add-new")
     public String addNew(){
