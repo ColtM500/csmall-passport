@@ -1,6 +1,8 @@
 package com.example.csmallpassport.config;
 
+import com.example.csmallpassport.filter.JwtAuthorizationFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,11 +11,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Slf4j
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)//新增 基于方法的权限检查
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -51,9 +57,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest() //匹配任何请求
                 .authenticated() //以上匹配的请求必须是”已经通过认证的“
         ;
+
+        //将自定义的JWT过滤器添加在Spring Security 的UsernamePasswordAuthenticationFilter之前
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
         //调用formLogin表示启用登录和登出页面 如果未调用此方法 则没有登录和登出页面
 //        http.formLogin();
-
 //        super.configure(http); //不要调用父类的同款方法
     }
 }

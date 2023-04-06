@@ -21,8 +21,8 @@ public class AdminController {
     @PostMapping("/login")
     public JsonResult login(AdminLoginDTO adminLoginDTO) {
         log.debug("开始处理【管理员登录】的请求，参数：{}", adminLoginDTO);
-        service.login(adminLoginDTO);
-        return JsonResult.ok();
+        String jwt = service.login(adminLoginDTO);
+        return JsonResult.ok(jwt);
     }
 
     @PostMapping("/add-new")
