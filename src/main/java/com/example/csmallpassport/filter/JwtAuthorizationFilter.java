@@ -1,6 +1,7 @@
 package com.example.csmallpassport.filter;
 
 
+import com.example.csmallpassport.security.LoginPrincipal;
 import com.sun.corba.se.spi.ior.ObjectKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -89,7 +90,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
          * 这段代码的主要作用是将解析JWT得到的用户信息创建为一个Authentication对象，
          * 并将该对象存放到SecurityContext中，用于后续的鉴权操作。
          */
-        Object principal = username;// 当事人：暂时使用用户名
+        LoginPrincipal loginPrincipal = new LoginPrincipal();
+        loginPrincipal.setId(id);
+        loginPrincipal.setUsername(username);
+
+        Object principal = loginPrincipal;// 当事人：暂时使用用户名
         ObjectKey credentials = null;// 凭证：应该为null
         //创建了一个SimpleGrantedAuthority对象，并将其添加到authorities集合中，
         // 表示当前用户拥有的权限。
