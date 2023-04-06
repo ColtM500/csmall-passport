@@ -66,6 +66,12 @@
             <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
+        <!-- JJWT（Java JWT） -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
         <!-- Spring Boot支持Spring Security的依赖项，主要解决认证与授权相关问题 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
