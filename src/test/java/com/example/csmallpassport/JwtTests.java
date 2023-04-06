@@ -20,8 +20,9 @@ public class JwtTests {
         Date exp = new Date(System.currentTimeMillis()+5*60*1000);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id", 9827);
-        claims.put("username","ZhangSan");
+//        claims.put("id", 9827);
+//        claims.put("username","ZhangSan");
+        claims.put("i",1);
 
         String jwt = Jwts.builder()
 //                Header（头部信息）：声明算法与Token的类型
@@ -36,6 +37,7 @@ public class JwtTests {
         System.out.println(jwt);
         //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTgyNywiZXhwIjoxNjgwNzUyNzAxLCJ1c2VybmFtZSI6IlpoYW5nU2FuIn0.LRWg56Q9wwBV0VNt6tOa6GOLlsbUlWguoJ7eNH_31Z4
     //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTgyNywiZXhwIjoxNjgwNzUzMDM5LCJ1c2VybmFtZSI6IlpoYW5nU2FuIn0.OJo3yw3ErFdPxKUEfrZq7p9PFpYil7GtAhpLsF0bR7U
+   //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpIjoxLCJleHAiOjE2ODA3NzAwNjh9.OSzUUOP5R1Rnxz8jKlRuLp-K5HESNHmiPVkf3fxReas
     }
 
     @Test
