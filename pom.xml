@@ -72,6 +72,12 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <!-- fastjson：实现对象与JSON的相互转换 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.75</version>
+        </dependency>
         <!-- Spring Boot支持Spring Security的依赖项，主要解决认证与授权相关问题 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

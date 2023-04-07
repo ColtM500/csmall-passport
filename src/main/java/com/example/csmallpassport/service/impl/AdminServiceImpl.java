@@ -1,5 +1,6 @@
 package com.example.csmallpassport.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
 import com.example.csmallpassport.security.AdminDetails;
 import com.example.csmallpassport.service.IAdminService;
@@ -7,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,12 @@ import java.util.Map;
 @Slf4j
 @Service
 public class AdminServiceImpl implements IAdminService {
+
+    @Value("${csmall.jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${csmall.jwt.duration-in-minute}")
+    private Long durationInMinute;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -49,11 +57,12 @@ public class AdminServiceImpl implements IAdminService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id",adminDetails.getId());
         claims.put("username",adminDetails.getUsername());
+        String authoritiesJsonString = JSON.toJSONString(adminDetails.getAuthorities());
+        claims.put("authoritiesJsonString", authoritiesJsonString);
         log.debug("即将生成JWT数据，包含的账号信息是:{}",claims);
 
         //生成JWT 并返回JWT
-        String secretKey = "kU4jrFA3iuI5jn25u743kfDs7a8pFEwS54hm";
-        Date exp = new Date(System.currentTimeMillis()+10*24*60*60*1000);
+        Date exp = new Date(System.currentTimeMillis()+durationInMinute*60*1000);
         String jwt = Jwts.builder()
                 .setHeaderParam("alg", "HS256")
                 .setHeaderParam("typ", "JWT")

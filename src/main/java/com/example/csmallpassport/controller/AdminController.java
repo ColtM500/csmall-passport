@@ -1,6 +1,7 @@
 package com.example.csmallpassport.controller;
 
 import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
+import com.example.csmallpassport.security.LoginPrincipal;
 import com.example.csmallpassport.service.IAdminService;
 import com.example.csmallpassport.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class AdminController {
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasAuthority('/ams/admin/update')")
     public String update(){
         return "接收到【修改管理员】的请求， 但是， 服务器端尚未实现此功能!";
     }
@@ -48,8 +50,8 @@ public class AdminController {
 
     @GetMapping("")
     @PreAuthorize("hasAuthority('/ams/admin/read')")
-    public String list(@AuthenticationPrincipal @ApiIgnore User user){
-        log.debug("当事人的用户名:{}",user.getUsername());
+    public String list(@AuthenticationPrincipal @ApiIgnore LoginPrincipal loginPrincipal){
+        log.debug("当事人的用户名:{}",loginPrincipal.getUsername());
 
         return "接收到【添加管理员列表】的请求,但是,服务器端尚未实现此功能!";
     }

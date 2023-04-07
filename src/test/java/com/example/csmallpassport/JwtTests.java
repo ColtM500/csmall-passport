@@ -4,20 +4,24 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@SpringBootTest
 public class JwtTests {
-    //一些盐值
+
     String secretKey = "kU4jrFA3iuI5jn25u743kfDs7a8pFEwS54hm";
 
     @Test
     public void generate(){
 
+        System.out.println(secretKey);
 
-        Date exp = new Date(System.currentTimeMillis()+5*60*1000);
+        Date exp = new Date(System.currentTimeMillis()+ 10 * 24 * 60 * 60 * 1000);
 
         Map<String, Object> claims = new HashMap<>();
 //        claims.put("id", 9827);
@@ -44,7 +48,7 @@ public class JwtTests {
     public void parse() {
         //因为容易过期+这里被篡改 不想一直检查所以try起来
         try {
-            String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTgyNywiZXhwIjoxNjgwNzUzMDM5LCJ1c2VybmFtZSI6IlpoYW5nU2FuIn0.OJo3yw3ErFdPxKUEfrZq7p9PFpYil7GtAhpLsF0bR7U";
+            String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpIjoxLCJleHAiOjE2ODA4Mzc0MjJ9.T3jW_Qp7-nsXp4KnVJB4Pka_ePfWSyZY-rd-JYITEhU";
 
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)

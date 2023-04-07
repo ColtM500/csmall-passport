@@ -51,7 +51,19 @@ public enum ServiceCode {
     /**
      * 错误：修改数据错误
      */
-    ERROR_UPDATE(50200);
+    ERROR_UPDATE(50200),
+    /**
+     * 错误：JWT已过期
+     */
+    ERR_JWT_EXPIRED(60000),
+    /**
+     * 错误：验证签名失败
+     */
+    ERR_JWT_SIGNATURE(60100),
+    /**
+     * 错误：JWT格式错误
+     */
+    ERR_JWT_MALFORMED(60200);
 
 
     private Integer value;

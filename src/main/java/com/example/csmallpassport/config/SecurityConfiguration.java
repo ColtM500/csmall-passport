@@ -1,6 +1,9 @@
 package com.example.csmallpassport.config;
 
+import com.alibaba.fastjson.JSON;
 import com.example.csmallpassport.filter.JwtAuthorizationFilter;
+import com.example.csmallpassport.web.JsonResult;
+import com.example.csmallpassport.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +13,17 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @Configuration
@@ -36,6 +47,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 处理“当客户端提交请求时没有携带JWT，请求的目标却是需要通过认证的资源”的问题
+        http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
+            @Override
+            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+                response.setContentType("application/json; charset=utf-8;");
+                String message = "未检测到登录信息，请登录！（在开发阶段，看到此提示时，请检查客户端是否携带了有效的JWT数据）";
+                log.warn(message);
+                JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED, message);
+                String jsonResultString = JSON.toJSONString(jsonResult);
+                PrintWriter writer = response.getWriter();
+                writer.println(jsonResultString);
+                writer.close();
+            }
+        });
+
         // 白名单
         // 所有路径必须使用 / 作为第1个字符
         // 使用1个星号作为通配符时，表示通配此层级的任意资源，例如：/admins/*，可以匹配 /admins/delete、/admins/add-new
@@ -48,6 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.js",
                 "/swagger-resources",
                 "/v2/api-docs",
+                "admins/login"
         };
 
         // 禁用“防止伪造的跨域攻击”这种防御机制
