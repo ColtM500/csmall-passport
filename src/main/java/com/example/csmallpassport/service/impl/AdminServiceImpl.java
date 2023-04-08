@@ -1,6 +1,7 @@
 package com.example.csmallpassport.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.example.csmallpassport.pojo.dto.AdminAddNewDTO;
 import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
 import com.example.csmallpassport.security.AdminDetails;
 import com.example.csmallpassport.service.IAdminService;
@@ -72,5 +73,10 @@ public class AdminServiceImpl implements IAdminService {
                 .compact();
         log.debug("生成了JWT数据，并将返回此JWT数据：{}", jwt);
         return jwt;
+    }
+
+    @Override
+    public void addNew(AdminAddNewDTO adminAddNewDTO) {
+
     }
 }

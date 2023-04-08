@@ -1,5 +1,6 @@
 package com.example.csmallpassport.service;
 
+import com.example.csmallpassport.pojo.dto.AdminAddNewDTO;
 import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,5 +13,7 @@ public interface IAdminService {
      * @return 验证登录通过后的JWT
      */
     String login(AdminLoginDTO adminLoginDTO);
+
+    void addNew(AdminAddNewDTO adminAddNewDTO);
 }
 
