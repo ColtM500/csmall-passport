@@ -95,7 +95,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             //构建Json结果 使用JsonResult.fail()构建一个JSON格式错误结果
             JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_JWT_EXPIRED, message);
             //使用JSON.toJSONString() 方法将JSON结果转换为字符串格式
-            String jsonResultString =  JSON.toJSONString(jsonResult);
+            String jsonResultString = JSON.toJSONString(jsonResult);
             //将字符串结果
             PrintWriter writer = response.getWriter();
             writer.println(jsonResultString);
