@@ -138,8 +138,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.debug("从JWT中解析得到的管理员用户名：{}", username);
         log.debug("从JWT中解析得到管理员权限列表的JSON：{}",authoritiesJsonString);
 
-        // TODO: 3.使用用户名的字符串作为“当事人”并不是最优解
-        // TODO: 4.需要调整使用真实的权限
         /**
          * 基于解析JWT的结果创建为Authentication对象
          *
