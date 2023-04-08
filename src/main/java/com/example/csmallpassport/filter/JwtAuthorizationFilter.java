@@ -89,10 +89,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     .parseClaimsJws(jwt)
                     .getBody();
         } catch (ExpiredJwtException e){
+            //将错误信息保存在一个字符串变量message中
             String message = "您的登录信息已过期，请重新登录！";
             log.warn(message);
+            //构建Json结果 使用JsonResult.fail()构建一个JSON格式错误结果
             JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_JWT_EXPIRED, message);
+            //使用JSON.toJSONString() 方法将JSON结果转换为字符串格式
             String jsonResultString =  JSON.toJSONString(jsonResult);
+            //将字符串结果
             PrintWriter writer = response.getWriter();
             writer.println(jsonResultString);
             writer.close();
@@ -124,6 +128,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             writer.println(jsonResultString);
             writer.close();
         }
+
+        log.info("claims输出为"+claims);
+
         Long id = claims.get("id", Long.class);
         String username = claims.get("username", String.class);
         String authoritiesJsonString = claims.get("authoritiesJsonString",String.class);
