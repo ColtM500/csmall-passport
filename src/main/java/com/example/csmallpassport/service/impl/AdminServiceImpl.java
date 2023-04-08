@@ -1,13 +1,20 @@
 package com.example.csmallpassport.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.example.csmallpassport.ex.ServiceException;
+import com.example.csmallpassport.mapper.AdminMapper;
 import com.example.csmallpassport.pojo.dto.AdminAddNewDTO;
 import com.example.csmallpassport.pojo.dto.AdminLoginDTO;
+import com.example.csmallpassport.pojo.entity.Admin;
+import com.example.csmallpassport.pojo.vo.AdminListItemVO;
+import com.example.csmallpassport.pojo.vo.AdminStandardVO;
 import com.example.csmallpassport.security.AdminDetails;
 import com.example.csmallpassport.service.IAdminService;
+import com.example.csmallpassport.web.ServiceCode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,10 +22,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -33,6 +42,49 @@ public class AdminServiceImpl implements IAdminService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private AdminMapper mapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public void setEnable(Long id) {
+        updateEnableById(id,1);
+    }
+
+    @Override
+    public void setDisable(Long id) {
+        updateEnableById(id,0);
+    }
+
+    private void updateEnableById(Long id, Integer enable){
+        log.debug("开始处理【{}管理员】的业务，ID：{}，目标状态:{}",ENABLE_TEXT[enable],id,enable);
+        if (id==1){
+            String message = ENABLE_TEXT[enable] + "管理员失败，尝试访问的数据不存在!";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
+        }
+
+        AdminStandardVO currentAdmin = mapper.getStandardById(id);
+        if (currentAdmin==null){
+            String message = ENABLE_TEXT[enable] + "类别失败，尝试访问的数据不在!";
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
+        }
+
+        if (currentAdmin.getEnable()==enable){
+            String message = ENABLE_TEXT[enable] + "类别失败，当前类别已处于【"+ ENABLE_TEXT[enable] +"】状态!";
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
+
+        Admin admin = new Admin();
+        admin.setId(id);
+        admin.setEnable(enable);
+        int rows = mapper.update(admin);
+        if (rows!=1){
+            String message = ENABLE_TEXT[enable] + "类别失败，服务器繁忙，请稍后再试!";
+            throw new ServiceException(ServiceCode.ERROR_UPDATE, message);
+        }
+    }
 
     @Override
     public String login(AdminLoginDTO adminLoginDTO) {
@@ -77,6 +129,79 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public void addNew(AdminAddNewDTO adminAddNewDTO) {
+        //检测用户名是否唯一
+        String username = adminAddNewDTO.getUsername();
+        int countByUsername = mapper.countByUserName(username);
+        if (countByUsername>0){
+            String message = "添加管理员失败，用户名已被占用!";
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
 
+        //检测手机号是否唯一
+        String phone = adminAddNewDTO.getPhone();
+        int countByPhone = mapper.countByPhone(phone);
+        if (countByPhone>0){
+            String message = "添加管理员失败，手机号已被占用!";
+            throw new ServiceException(ServiceCode.ERR_INSERT, message);
+        }
+
+        //检测电子邮箱是否唯一
+        String email = adminAddNewDTO.getEmail();
+        int countByEmail = mapper.countByEmail(email);
+        if (countByEmail>0){
+            String message = "添加管理员失败，邮箱已被占用!";
+            throw new ServiceException(ServiceCode.ERR_INSERT,message);
+        }
+
+        Admin admin = new Admin();
+        BeanUtils.copyProperties(adminAddNewDTO,admin);
+
+        String rawPassword = admin.getPassword();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        admin.setPassword(encodedPassword);
+
+        int rows = mapper.insert(admin);
+        if (rows!=1){
+            String message = "添加管理员失败！ 服务器繁忙，请稍后再试!";
+            throw new ServiceException(ServiceCode.ERR_INSERT, message);
+        }
     }
+
+    @Override
+    public void delete(Long id) {
+        log.debug("开始处理【根据id删除管理员】的业务，参数:{}",id);
+
+        if (id==1){
+            String message = "删除管理员失败，不可删除1号管理员!";
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
+
+        AdminStandardVO queryResult = mapper.getStandardById(id);
+        if (queryResult==null){
+            String message = "获取管理员信息失败，尝试访问的数据不存在!";
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND,message);
+        }
+        int rows = mapper.deleteById(id);
+        if (rows!=1){
+            String message = "删除管理员失败，服务器繁忙，请稍后再试!";
+            throw new ServiceException(ServiceCode.ERR_DELETE,message);
+        }
+    }
+
+    @Override
+    public AdminStandardVO getStandardById(Long id) {
+        AdminStandardVO queryResult = mapper.getStandardById(id);
+        if (queryResult==null){
+            String message = "根据id查找失败，访问的数据不存在!";
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND,message);
+        }
+        return queryResult;
+    }
+
+    @Override
+    public List<AdminListItemVO> list() {
+        List<AdminListItemVO> list = mapper.list();
+        return list;
+    }
+
 }
