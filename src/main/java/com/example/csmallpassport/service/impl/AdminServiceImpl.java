@@ -25,10 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -173,7 +170,7 @@ public class AdminServiceImpl implements IAdminService {
 
         if (id==1){
             String message = "删除管理员失败，不可删除1号管理员!";
-            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
         }
 
         AdminStandardVO queryResult = mapper.getStandardById(id);
@@ -190,6 +187,10 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public AdminStandardVO getStandardById(Long id) {
+        if (id==1){
+            String message = "根据id查询管理员失败，不可查询1号管理员!";
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
+        }
         AdminStandardVO queryResult = mapper.getStandardById(id);
         if (queryResult==null){
             String message = "根据id查找失败，访问的数据不存在!";
@@ -201,6 +202,14 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public List<AdminListItemVO> list() {
         List<AdminListItemVO> list = mapper.list();
+        Iterator<AdminListItemVO> iterator = list.iterator();
+        while (iterator.hasNext()){
+            AdminListItemVO itemVO = iterator.next();
+            if (itemVO.getId()==1){
+                iterator.remove();
+                break;
+            }
+        }
         return list;
     }
 
