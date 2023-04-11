@@ -77,6 +77,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "admins/login"
         };
 
+        // 此方法会配置Spring Security框架自带的CorsFilter，此过滤器会对OPTIONS请求放行
+        http.cors();
+
         // 禁用“防止伪造的跨域攻击”这种防御机制
         http.csrf().disable();
 
