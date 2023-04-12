@@ -78,6 +78,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.75</version>
         </dependency>
+        <!--SpringBoot支持Sping AOP的依赖项 用于实现AOP编程-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!-- Spring Boot支持Spring Security的依赖项，主要解决认证与授权相关问题 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

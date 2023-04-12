@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.js",
                 "/swagger-resources",
                 "/v2/api-docs",
-                "admins/login"
+                "admins/login",
         };
 
         // 此方法会配置Spring Security框架自带的CorsFilter，此过滤器会对OPTIONS请求放行
